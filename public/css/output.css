@@ -608,6 +608,10 @@ video {
   gap: 5rem;
 }
 
+.border {
+  border-width: 1px;
+}
+
 .bg-custom-black {
   --tw-bg-opacity: 1;
   background-color: rgb(26 26 27 / var(--tw-bg-opacity));
@@ -648,6 +652,10 @@ video {
 .text-custom-khaki-light {
   --tw-text-opacity: 1;
   color: rgb(234 217 213 / var(--tw-text-opacity));
+}
+
+.filter {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 .transition {
