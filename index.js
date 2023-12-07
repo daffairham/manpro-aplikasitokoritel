@@ -1,18 +1,14 @@
-const express = require('express');
-const path = require('path');
-const app = express();
+import express from "express"
+import routes from "./controller/routes.js"
 
+const app = express()
+const port = 3000
 
+app.listen(port, ()=> {
+    console.log(`Running on port ${port}`)
+})
 
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
-// ...
-app.use('/public', express.static(path.join(__dirname, 'public'))); //middleware static file
-
-
-// Jalankan server
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Server berjalan di http://localhost:${port}`);
-});
+app.use(express.static("public"))
+app.set("view engine", "ejs")
+app.use(express.urlencoded({ extended: false}))
+app.use(routes)
