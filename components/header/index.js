@@ -6,6 +6,11 @@ const Header = {
             </div>
         `
     ,
+    global: `
+            <div class="mt-[3vh] w-auto">
+                <h1 class="pb-2 font-semibold text-center text-custom-black text-2xl w-full border-b border-custom-khaki-dark">DataLabs</h1>
+            </div>
+    `
 }
 
 export{Header as Header}
