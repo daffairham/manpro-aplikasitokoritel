@@ -1,7 +1,7 @@
 const Container = {
     upload:`
         <div class="bg-custom-black rounded-2xl w-full max-h-screen min-h-[60vh]">
-            <form action="#" class="h-full flex flex-col items-center justify-center">
+            <form action="/upload" method="post" encType="multipart/form-data" class="h-full flex flex-col items-center justify-center">
                 <div class="text-[#fff] text-lg py-8 w-auto">
                     <input type="file" name="upload" class="text-right">
                 </div>
