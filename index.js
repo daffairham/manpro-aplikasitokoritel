@@ -1,3 +1,5 @@
+process.env.NODE_ENV = 'development';
+
 import express from "express";
 import routes from "./controller/routes.js";
 import multer from "multer";
@@ -20,15 +22,22 @@ const storage = multer.diskStorage({
     limits: { fileSize: 5 * 1024 *1024 }, 
   });
 
-// Use Multer Middleware
-app.use(upload.single("uploadfile")); // Use the correct field name used in the form
-
 // Your routes come after Multer configuration
 app.use("/upload", routes);
 app.use(express.static("public"));
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: false }));
 app.use(routes);
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Internal Server Error');
+});
+
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).send('Internal Server Error');
+});
 
 app.listen(port, () => {
   console.log(`Running on port ${port}`);

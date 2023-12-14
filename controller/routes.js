@@ -1,6 +1,10 @@
 import express from "express";
 import multer from "multer";
+import readXlsxFile from 'read-excel-file/node';
+import path from 'path';
 import xlsx from "xlsx";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
 // components
 import { Header } from "../components/header/index.js"
@@ -47,7 +51,13 @@ router.post("/upload", upload.single("uploadfile"), (req, res) => {
         return res.status(400).send("No file uploaded.");
     }
     console.log(req.file); // Log file information
-    const filePath = __dirname + "/public/uploads/" + req.file.filename;
+    
+    // Get the current module's file path
+    const __filename = fileURLToPath(import.meta.url);
+    // Get the directory path
+    const __dirname = dirname(__filename);
+    
+    const filePath = path.resolve(__dirname, "public", "uploads", req.file.filename);
     importExcelData2MySQL(filePath)
         .then(() => {
             console.log("berhasil");
