@@ -2,10 +2,8 @@
 <html lang="en">
 <%- Head %>
 <body class="flex justify-between">
-    <div class="mx-[5vh] my-[3vh] flex flex-row justify-between w-auto  absolute top-0 left-0 right-0">
-        <h1 class="pb-2 font-semibold text-custom-black text-2xl w-1/2 border-b border-custom-black">DataLabs</h1>
-        <h1 class="text-right font-extralight text-custom-khaki-light text-2xl w-1/2 border-b border-custom-khaki-light">Dashboard Toko Ritel</h1>
-    </div>
+    <%- Header %>
+    
     <div class="w-1/2 h-screen bg-custom-khaki-light flex flex-col items-center justify-center">
         <h1 class="text-[130px]">DataLabs</h1>
         <h3 class="max-w-md font-light">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nostrum excepturi corrupti commodi deserunt omnis, ratione ipsum pariatur inventore. Dicta eos eveniet quidem praesentium laborum excepturi provident exercitationem facilis nam fugiat!</h3>
@@ -24,7 +22,7 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="w-full inline-flex items-center justify-between hover:text-custom-khaki-dark transition duration-0.75">
+                <a href="graph-bar" class="w-full inline-flex items-center justify-between hover:text-custom-khaki-dark transition duration-0.75">
                     <div>
                         <h3><span class="mr-7">02</span>Grafik bar</h3>
                         <h3 class="font-light text-xl ml-16">Menampilkan visualisasi grafik bar secara dinamis</h3>
@@ -35,7 +33,7 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="w-full inline-flex items-center justify-between hover:text-custom-khaki-dark transition duration-0.75">
+                <a href="scatter-plot" class="w-full inline-flex items-center justify-between hover:text-custom-khaki-dark transition duration-0.75">
                     <div>
                         <h3><span class="mr-7">03</span>Scatter plot</h3>
                         <h3 class="font-light text-xl ml-16">Menampilkan visualisasi scatter plot secara dinamis</h3>
@@ -46,7 +44,7 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="w-full inline-flex items-center justify-between hover:text-custom-khaki-dark transition duration-0.75">
+                <a href="summary" class="w-full inline-flex items-center justify-between hover:text-custom-khaki-dark transition duration-0.75">
                     <div>
                         <h3><span class="mr-7">04</span>Summary</h3>
                         <h3 class="font-light text-xl ml-16">Menampilkan Ringkasan data dalam format tabel</h3>

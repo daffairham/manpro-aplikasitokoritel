@@ -8,9 +8,76 @@
             ActiveNavigation('<%= Path %>')
         })
     </script>
-    <%- Navigation %>
+    <%- Navigation %> 
     <%- Layout %>
     
+    <script>
+        const data = {
+          "tahun": ["2020", "2021", "2022"],
+          "penjualan_daging": [
+            {
+              "jenis_daging": "Sapi",
+              "penjualan": [350, 400, 380]
+            },
+            {
+              "jenis_daging": "Ayam",
+              "penjualan": [500, 550, 600]
+            },
+            {
+              "jenis_daging": "Kambing",
+              "penjualan": [200, 220, 250]
+            }
+          ]
+        }    
+        const ctx = document.getElementById('myChart').getContext('2d')    
+        const labels = data.tahun
+        const datasets = data.penjualan_daging.map(item => {
+          return {
+            label: item.jenis_daging,
+            data: item.penjualan,
+            backgroundColor: getRandomColor(), 
+            borderColor: getRandomColor(),
+            borderWidth: 1
+          }
+        })
     
+        const config = {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: datasets
+          },
+          options: {
+            responsive: true,
+            scales: {
+              x: {
+                stacked: true,
+                title: {
+                  display: true,
+                  text: 'Tahun'
+                }
+              },
+              y: {
+                stacked: true,
+                title: {
+                  display: true,
+                  text: 'Penjualan'
+                }
+              }
+            }
+          }
+        }
+    
+        const myChart = new Chart(ctx, config);
+    
+        function getRandomColor() {
+          const letters = '0123456789ABCDEF'
+          let color = '#'
+          for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+          }
+          return color
+        }
+      </script>
 </body>
 </html>
