@@ -6,7 +6,7 @@ const pool = mysql.createPool({
   host: "localhost",
   user: "root",
   password: "",
-  database: "db_manpro",
+  database: "tokoritel_db",
 });
  
 

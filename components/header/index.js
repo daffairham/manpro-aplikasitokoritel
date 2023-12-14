@@ -14,4 +14,3 @@ const Header = {
 }
 
 export{Header as Header}
-
