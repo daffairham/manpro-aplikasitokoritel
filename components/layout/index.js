@@ -11,17 +11,14 @@ const Layout = {
             </section>
         `
     },
-    graph: (Path) => {
-        return `
+    graphBar: `
             <section class="m-[5vh] w-full max-w-[200vh] inline-flex justify-between">
-                <a href="hint?origin=${Path}" class="mr-[5vh]"> 
+                <a href="#" class="mr-[5vh]"> 
                     <img src="../assets/grafik.svg" alt="Petunjuk" class="aspect-auto max-h-screen min-h-[60vh]">
                 </a>
-                ${Container.graph}
+                ${Container.graphBar}
             </section>
-        `
-    } ,
-    
+    `
 
 }
 

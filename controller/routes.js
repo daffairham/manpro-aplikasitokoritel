@@ -50,24 +50,32 @@ router.post("/upload", upload.single("upload"), (req, res) => {
 });
 
 // route halaman grafik bar
-router.get('/graph-bar', (req,res) => {
-    res.render('graph-bar/index', {
-        Head: Head('../css/output.css', '../js/cosmetic.js', 'Grafik Bar'),
-        Header: Header.global,
-        Path: 'graph-bar',
-        Navigation: Navigation.global,
-        Layout: Layout.graph('graph-bar')
-    })
-})
+router.get("/graph-bar", (req, res) => {
+  res.render("graph-bar/index", {
+    Head: Head("../css/output.css", "../js/cosmetic.js", "Grafik Bar"),
+    Header: Header.global,
+    Path: "graph-bar",
+    Navigation: Navigation.global,
+    Layout: Layout.graphBar,
+  });
+});
 
 // route halaman scatter plot
-router.get('/scatter-plot', (req,res) => {
-    res.render('scatter-plot/', {
-        Head: Head('../css/output.css', '../js/cosmetic.js', 'Scatter Plot'),
-        Header: Header.global,
-        Path: 'scatter-plot',
-        Navigation: Navigation.global,
-        Layout: Layout.graphBar,
-    })
-})
-export default router
+router.get("/scatter-plot", (req, res) => {
+  res.render("scatter-plot/", {
+    Head: Head("../css/output.css", "../js/cosmetic.js", "Scatter Plot"),
+    Header: Header.global,
+    Path: "scatter-plot",
+    Navigation: Navigation.global,
+    Layout: Layout.graphBar,
+  });
+});
+
+router.get('/summary', (req, res) => {
+    const query = 'SELECT Education, COUNT(*) AS CountFish FROM Customer GROUP BY Education';
+    pool.query(query, (err, results) => {
+      if (err) throw err;
+      res.json(results);
+    });
+  });
+export default router;

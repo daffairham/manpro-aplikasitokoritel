@@ -11,7 +11,7 @@ const Container = {
             </form>
         </div>
     `,
-    graph:`
+    graphBar:`
         <div class="bg-custom-black rounded-2xl w-full max-h-screen min-h-[60vh] inline-flex justify-between overflow-hidden">
                 <form action="#" class="mx-auto mt-12 h-80 w-auto flex flex-col items-center justify-between">
                     <div class="grid grid-flow-row gap-3 w-56">
@@ -33,13 +33,11 @@ const Container = {
                         Button
                     </button>
                 </form>
-                <div class="h-full w-2/3  max-w-[130vh] px-6 py-8">
-                    <div class="h-[60vh] w-full aspect-auto bg-[#fff] overflow-hidden rounded-md inline-flex items-center justify-center">
-                        <canvas id="myChart"></canvas>
-                    </div>
+                <div class="bg-custom-khaki-dark h-full w-2/3">
+                    <h1>grafik</h1>
                 </div>
             </div>
-    `,
+    `
 }
 
 export { Container as Container}
