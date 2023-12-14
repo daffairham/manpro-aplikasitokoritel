@@ -1,17 +1,17 @@
 const Container = {
-    upload:`
+    upload: `
         <div class="bg-custom-black rounded-2xl w-full max-h-screen min-h-[60vh]">
-            <form action="#" class="h-full flex flex-col items-center justify-center">
-                <div class="text-[#fff] text-lg py-8 w-auto">
-                    <input type="file" name="upload" class="text-right">
+        <form action="/upload" method="post" encType="multipart/form-data" class="h-full flex flex-col items-center justify-center">
+                        <div class="text-[#fff] text-lg py-8 w-auto">
+                    <input type="file" name="uploadfile" class="text-right">
                 </div>
-                <button class="bg-custom-orchid border-2 border-custom-orchid hover:bg-custom-black  hover:border-custom-orchid hover:text-custom-orchid transition duration-0.75 px-4 py-2 font-medium text-lg text-custom-black rounded-lg">
+                <button type="submit" class="bg-custom-orchid border-2 border-custom-orchid hover:bg-custom-black  hover:border-custom-orchid hover:text-custom-orchid transition duration-0.75 px-4 py-2 font-medium text-lg text-custom-black rounded-lg">
                     Upload
                 </button>
             </form>
         </div>
     `,
-    graph:`
+    graph: `
         <div class="bg-custom-black rounded-2xl w-full max-h-screen min-h-[60vh] inline-flex justify-between overflow-hidden">
                 <form action="#" class="mx-auto mt-12 h-80 w-auto flex flex-col items-center justify-between">
                     <div class="grid grid-flow-row gap-3 w-56">
@@ -42,4 +42,4 @@ const Container = {
     `,
 }
 
-export { Container as Container}
+export { Container as Container }
