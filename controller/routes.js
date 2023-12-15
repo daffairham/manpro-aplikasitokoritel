@@ -65,7 +65,7 @@ router.post("/upload", upload.single("uploadfile"), (req, res) => {
         })
         .catch((error) => {
             console.error("Error importing data:", error);
-            res.status(500).send("Internal Server Error");
+            res.status(500).send("Maaf, saat ini masih belum bisa T-T, sudah 80% kok!");
         });
 });
 
