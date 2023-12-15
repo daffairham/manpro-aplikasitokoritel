@@ -73,8 +73,9 @@ router.post("/upload", upload.single("uploadfile"), (req, res) => {
 async function importExcelData2MySQL(filePath) {
     return new Promise((resolve, reject) => {
         readXlsxFile(filePath).then((rows) => {
+            console.log("Rows before shift:", rows);
             rows.shift(); // Remove header row
-
+            console.log("Rows after shift:", rows);
             const peopleData = [];
             const productsData = [];
             const promotionData = [];
@@ -83,31 +84,55 @@ async function importExcelData2MySQL(filePath) {
             rows.forEach((row) => {
                 // Assuming the Excel columns correspond to the table columns
                 const peopleRow = [
-                    row.ID,
-                    row.Year_Birth,
+                    parseInt(row.Year_Birth) || null,
                     row.Education,
                     row.Marital_Status,
-                    row.Income,
-                    row.Kidhome,
-                    row.Teenhome,
+                    parseInt(row.Income) || null,
+                    parseInt(row.Kidhome) || null,
+                    parseInt(row.Teenhome) || null,
                     row.Dt_Customer,
-                    row.Recency,
-                    row.Complain,
+                    parseInt(row.Recency) || null,
+                    parseInt(row.Complain) || null,
                 ];
 
-                const productsRow = [row.ID, row.MntWines, row.MntFruits, row.MntMeatProducts, row.MntFishProducts, row.MntSweetProducts, row.MntGoldProds];
-                const promotionRow = [row.ID, row.NumDealsPurchases, row.AcceptedCmp1, row.AcceptedCmp2, row.AcceptedCmp3, row.AcceptedCmp4, row.AcceptedCmp5, row.Response];
-                const placeRow = [row.ID, row.NumWebPurchases, row.NumCatalogPurchases, row.NumStorePurchases, row.NumWebVisitsMonth];
+                const productsRow = [
+                    parseInt(row.MntWines) || null,
+                    parseInt(row.MntFruits) || null,
+                    parseInt(row.MntMeatProducts) || null,
+                    parseInt(row.MntFishProducts) || null,
+                    parseInt(row.MntSweetProducts) || null,
+                    parseInt(row.MntGoldProds) || null,
+                ];
+                const promotionRow = [
+                    parseInt(row.NumDealsPurchases) || null,
+                    parseInt(row.AcceptedCmp1) || null,
+                    parseInt(row.AcceptedCmp2) || null,
+                    parseInt(row.AcceptedCmp3) || null,
+                    parseInt(row.AcceptedCmp4) || null,
+                    parseInt(row.AcceptedCmp5) || null,
+                    parseInt(row.Response) || null,
+                ];
+                const placeRow = [
+                    parseInt(row.NumWebPurchases) || null,
+                    parseInt(row.NumCatalogPurchases) || null,
+                    parseInt(row.NumStorePurchases) || null,
+                    parseInt(row.NumWebVisitsMonth) || null,
+                ];
 
                 peopleData.push(peopleRow);
                 productsData.push(productsRow);
                 promotionData.push(promotionRow);
                 placeData.push(placeRow);
             });
+            // Log the data before insertion
+            console.log("People Data:", peopleData);
+            console.log("Products Data:", productsData);
+            console.log("Promotion Data:", promotionData);
+            console.log("Place Data:", placeData);
 
             // Insert data into People table
             const peopleQuery =
-                "INSERT INTO People (ID, Year_Birth, Education, Marital_Status, Income, Kidhome, Teenhome, Dt_Customer, Recency, Complain) VALUES ?";
+                "INSERT INTO people (Year_Birth, Education, Marital_Status, Income, Kidhome, Teenhome, Dt_Customer, Recency, Complain) VALUES ?";
             pool.query(peopleQuery, [peopleData], (error, results) => {
                 if (error) {
                     console.error("Error inserting into People table:", error);
@@ -119,7 +144,7 @@ async function importExcelData2MySQL(filePath) {
 
             // Insert data into Products table
             const productsQuery =
-                "INSERT INTO Products (ID, MntWines, MntFruits, MntMeatProducts, MntFishProducts, MntSweetProducts, MntGoldProds) VALUES ?";
+                "INSERT INTO products (MntWines, MntFruits, MntMeatProducts, MntFishProducts, MntSweetProducts, MntGoldProds) VALUES ?";
             pool.query(productsQuery, [productsData], (error, results) => {
                 if (error) {
                     console.error("Error inserting into Products table:", error);
@@ -131,7 +156,7 @@ async function importExcelData2MySQL(filePath) {
 
             // Insert data into Promotion table
             const promotionQuery =
-                "INSERT INTO Promotion (ID, NumDealsPurchases, AcceptedCmp1, AcceptedCmp2, AcceptedCmp3, AcceptedCmp4, AcceptedCmp5, Response) VALUES ?";
+                "INSERT INTO promotion (NumDealsPurchases, AcceptedCmp1, AcceptedCmp2, AcceptedCmp3, AcceptedCmp4, AcceptedCmp5, Response) VALUES ?";
             pool.query(promotionQuery, [promotionData], (error, results) => {
                 if (error) {
                     console.error("Error inserting into Promotion table:", error);
@@ -143,19 +168,23 @@ async function importExcelData2MySQL(filePath) {
 
             // Insert data into Place table
             const placeQuery =
-                "INSERT INTO Place (ID, NumWebPurchases, NumCatalogPurchases, NumStorePurchases, NumWebVisitsMonth) VALUES ?";
+                "INSERT INTO place (NumWebPurchases, NumCatalogPurchases, NumStorePurchases, NumWebVisitsMonth) VALUES ?";
             pool.query(placeQuery, [placeData], (error, results) => {
                 if (error) {
                     console.error("Error inserting into Place table:", error);
                     reject(error);
                 } else {
                     console.log("Data inserted into Place table successfully");
-                    resolve();
+                    resolve("Data inserted into the database successfully");
                 }
             });
         });
     });
 }
+
+// ...
+
+// ...
 
 // route halaman grafik bar
 router.get('/graph-bar', (req, res) => {
