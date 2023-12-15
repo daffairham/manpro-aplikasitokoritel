@@ -17,7 +17,7 @@ const router = express.Router();
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, "uploads/");
+        cb(null, "public/uploads/");
     },
     filename: function (req, file, cb) {
         cb(null, Date.now() + "-" + file.originalname);
@@ -57,7 +57,7 @@ router.post("/upload", upload.single("uploadfile"), (req, res) => {
     // Get the directory path
     const __dirname = dirname(__filename);
     
-    const filePath = path.resolve(__dirname, "uploads", req.file.filename);
+    const filePath = path.resolve("public", "uploads", req.file.filename);
     importExcelData2MySQL(filePath)
         .then(() => {
             console.log("berhasil");
