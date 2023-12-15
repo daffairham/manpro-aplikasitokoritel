@@ -57,7 +57,7 @@ router.post("/upload", upload.single("uploadfile"), (req, res) => {
     // Get the directory path
     const __dirname = dirname(__filename);
     
-    const filePath = path.resolve(__dirname, "public", "uploads", req.file.filename);
+    const filePath = path.resolve(__dirname, "uploads", req.file.filename);
     importExcelData2MySQL(filePath)
         .then(() => {
             console.log("berhasil");
