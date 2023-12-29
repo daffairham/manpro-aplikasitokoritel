@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- Head %>
+  <body>
+    <%- Header %> <%- Navigation %> <%- Layout %>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initial render of the chart with dummy data
+        initializeChart(<%- JSON.stringify(data) %>, '<%= selectedAttribute %>');
+
+        // Function to fetch data from the server
+        function getData() {
+          const selectedAttribute = document.getElementById("atribut-1").value;
+
+          // Fetch data from the server
+          fetch("/graph-bar", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: `atribut-1=${selectedAttribute}`,
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+              }
+              return response.json();
+            })
+            .then((data) => {
+              console.log("Data received:", data);
+              // Update the chart with the new data
+              initializeChart(data, selectedAttribute);
+            })
+            .catch((error) => {
+              console.error("Error fetching data:", error);
+            });
+        }
+
+        // Function to initialize the Chart.js
+        function initializeChart(data, selectedAttribute) {
+          const ctx = document.getElementById("myChart").getContext("2d");
+          const myChart = new Chart(ctx, {
+            type: "bar",
+            data: {
+              labels: data.map((item) => item.id),
+              datasets: [
+                {
+                  label: selectedAttribute,
+                  data: data.map((item) => item[selectedAttribute]),
+                  backgroundColor: getRandomColor(),
+                  borderColor: getRandomColor(),
+                  borderWidth: 1,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              scales: {
+                x: {
+                  title: {
+                    display: true,
+                    text: "ID",
+                  },
+                },
+                y: {
+                  title: {
+                    display: true,
+                    text: selectedAttribute,
+                  },
+                },
+              },
+            },
+          });
+        }
+
+        // Call getData when the button is clicked
+        document.getElementById("buttonId").addEventListener("click", getData);
+
+        function getRandomColor() {
+          const letters = '0123456789ABCDEF';
+          let color = '#';
+          for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+          }
+          return color;
+        }
+      });
+    </script>
+  </body>
+</html>
