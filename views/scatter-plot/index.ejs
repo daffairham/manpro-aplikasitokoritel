@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- Head %>
+<body>
+    <%- Header %>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            ActiveNavigation('<%= Path %>')
+        })
+    </script>
+    <%- Navigation %>
+    <%- Layout %>
+    <script>
+        const scatterData = {
+          "data": [
+            { "x": 1, "y": 5 },
+            { "x": 2, "y": 3 },
+            { "x": 3, "y": 8 },
+            { "x": 4, "y": 6 },
+            { "x": 5, "y": 4 },
+            { "x": 6, "y": 9 }
+          ]
+        };
+    
+        const ctxScatter = document.getElementById('myChart').getContext('2d')
+    
+        const scatterX = scatterData.data.map(data => data.x)
+        const scatterY = scatterData.data.map(data => data.y)
+    
+        const scatterConfig = {
+          type: 'scatter',
+          data: {
+            datasets: [{
+              label: 'Scatter Plot',
+              data: scatterData.data,
+              backgroundColor: 'rgba(75, 192, 192, 0.5)', 
+              borderColor: 'rgba(75, 192, 192, 1)', 
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              x: {
+                type: 'linear',
+                position: 'bottom',
+                title: {
+                  display: true,
+                  text: 'X-axis'
+                }
+              },
+              y: {
+                type: 'linear',
+                position: 'left',
+                title: {
+                  display: true,
+                  text: 'Y-axis'
+                }
+              }
+            }
+          }
+        }
+    
+        const myScatterChart = new Chart(ctxScatter, scatterConfig)
+    </script>
+</body>
+</html>

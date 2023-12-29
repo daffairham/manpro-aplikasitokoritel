@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- Head %>
+<body>
+    <%- Header %>
+    <%- Navigation %>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            ActiveNavigation('<%= Path %>')
+        })
+    </script>
+
+    <section class="m-[5vh] w-full max-w-[200vh] p-4 overflow-hidden">
+        <% for(const key in Data){ %>
+            <div class="pb-10 w-full overflow-scroll">
+                <h1 class="font-semibold text-3xl pb-4"><%= key %></h1>
+                <div class="w-screen-2xl h-auto grid grid-flow-col overflow-scroll gap-8 py-2 bg-custom-khaki-light rounded-xl">
+                    <% for(const i of Data[key]){ %>
+                        <div class="grid w-[20vh] py-4 grid-flow-row gap-6 text-center items-center">
+                            <img src="../assets/data.svg" alt="data" class="w-24 mx-auto aspect-square">
+                            <p class="text-custom-khaki-light ">
+                                <span class="bg-custom-black rounded-3xl px-2 py-1"><%= Object.keys(i)[0] %></span>
+                            </p>
+                            <p class="h-20 w-full overflow-scroll"><%= Object.values(i)[0] %></p>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        <% } %>
+    </section>
+</body>
+</html>
