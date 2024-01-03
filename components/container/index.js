@@ -42,9 +42,12 @@ const Container = {
                     <div class="grid grid-flow-row gap-3 w-56">
                     <label for="atribut-1" class="text-[#fff] text-xl">Atribut 1</label>
                     <select name="atribut-1" id="atribut-1" class="px-10 py-2 rounded-md text-xl">
-                            <option value="Income">Income</option>
-                            <option value="NumCatalogPurchases">Pembelian Katalog</option>
-                            <option value="NumStorePurchases">Pembelian Toko</option>
+                            <option value="Year_Birth">Tahun Lahir</option>
+                            <option value="Income">Pendapatan</option>
+                            <option value="Kidhome">Anak di Rumah</option>
+                            <option value="Teenhome">Remaja di Rumah</option>
+                            <option value="Recency">Hari Pembelian Terakhir</option>                           
+
                         </select>
 
                         <label for="atribut-2" class="text-[#fff] text-xl">Atribut 2</label>
