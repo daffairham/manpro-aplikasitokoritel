@@ -1,108 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- Head %>
+  <%- Head %>
 
   <body>
-    <%- Header %> <%- Navigation %> <%- Layout %>
-    <%- JSON.stringify(data) %>
-    <%= selectedAttribute1 %>
-    <%= selectedAttribute2 %>
-          <script>
-            document.addEventListener("DOMContentLoaded", function () {
-              // Initial render of the chart with dummy data
+    <%- Header %> <%- Navigation %> <%- Layout %> 
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initial render of the chart with dummy data
+        initializeChart(<%- JSON.stringify(data) %>, '<%= selectedAttribute1 %>', '<%= selectedAttribute2 %>');
+        // Function to fetch data from the server
+        function getData() {
+          const selectedAttribute1 = document.getElementById("atribut-1").value;
+          const selectedAttribute2 = document.getElementById("atribut-2").value;
 
-              initializeChart(<% - JSON.stringify(data) %>, '<%= selectedAttribute1 %>', '<%= selectedAttribute2 %>');
-              console.log(<% - JSON.stringify(data) %>);
-              // Function to fetch data from the server
-              function getData() {
-                const selectedAttribute1 = document.getElementById("atribut-1").value;
-                const selectedAttribute2 = document.getElementById("atribut-2").value;
+          // Create form data
+          const formData = new URLSearchParams();
+          formData.append("atribut-1", selectedAttribute1);
+          formData.append("atribut-2", selectedAttribute2);
 
-                // Fetch data from the server
-                fetch("/scatter-plot", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type":"application/x-www-form-urlencoded",
-                  },
-                  body: `atribut-1=${selectedAttribute1}&atribut-2=${selectedAttribute2}`,
-                })
-                  .then((response) => {
-                    if (!response.ok) {
-                      throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json();
-                  })
-                  .then((data) => {
-                    console.log("Data received:", data);
-                    // Update the chart with the new data
-                    initializeChart(data, selectedAttribute1, selectedAttribute2);
-                  })
-                  .catch((error) => {
-                    console.error("Error fetching data:", error);
-                  });
+          // Fetch data from the server
+          fetch("/scatter-plot", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+              body: formData,
+            })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
               }
-
-              // Function to initialize the Chart.js
-              function initializeChart(data, selectedAttribute1, selectedAttribute2) {
-                const ctx = document.getElementById("myChart").getContext("2d");
-                const myChart = new Chart(ctx, {
-                  type: "scatter", // Change chart type to scatter
-                  data: {
-                    datasets: [
-                      {
-                        label: selectedAttribute1,
-                        data: data.map((item) => ({
-                          x: item.id,
-                          y: item[selectedAttribute1],
-                        })),
-                        backgroundColor: getRandomColor(),
-                        borderColor: getRandomColor(),
-                        borderWidth: 1,
-                      },
-                      {
-                        label: selectedAttribute2,
-                        data: data.map((item) => ({
-                          x: item.id,
-                          y: item[selectedAttribute2],
-                        })),
-                        backgroundColor: getRandomColor(),
-                        borderColor: getRandomColor(),
-                        borderWidth: 1,
-                      },
-                    ],
-                  },
-                  options: {
-                    responsive: true,
-                    scales: {
-                      x: {
-                        title: {
-                          display: true,
-                          text: "ID",
-                        },
-                      },
-                      y: {
-                        title: {
-                          display: true,
-                          text: `${selectedAttribute1} and ${selectedAttribute2}`,
-                        },
-                      },
-                    },
-                  },
-                });
-              }
-              // Call getData when the button is clicked
-              document.getElementById("buttonId").addEventListener("click", getData);
-
-              function getRandomColor() {
-                const letters = '0123456789ABCDEF';
-                let color = '#';
-                for (let i = 0; i < 6; i++) {
-                  color += letters[Math.floor(Math.random() * 16)];
-                }
-                return color;
-              }
+              return response.json();
+            })
+            .then((data) => {
+              console.log("Data received:", data);
+              // Update the chart with the new data
+              initializeChart(data, selectedAttribute1, selectedAttribute2);
+            })
+            .catch((error) => {
+              console.error("Error fetching data:", error);
             });
-          </script>
-  </body>
+        }
 
+        // Function to initialize the Chart.js
+        function initializeChart(data, selectedAttribute1, selectedAttribute2) {
+          const ctx = document.getElementById("myChart").getContext("2d");
+          const myChart = new Chart(ctx, {
+            type: "scatter", // Change chart type to scatter
+            data: {
+              datasets: [
+                {
+                  label: `${selectedAttribute1} vs ${selectedAttribute2}`,
+                  data: data.map((item) => ({
+                    x: item[selectedAttribute1],
+                    y: item[selectedAttribute2],
+                  })),
+                  backgroundColor: getRandomColor(),
+                  borderColor: getRandomColor(),
+                  borderWidth: 1,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              scales: {
+                x: {
+                  title: {
+                    display: true,
+                    text: selectedAttribute1,
+                  },
+                },
+                y: {
+                  title: {
+                    display: true,
+                    text: selectedAttribute2,
+                  },
+                },
+              },
+            },
+          });
+        }
+
+        // Call getData when the button is clicked
+        document.getElementById("buttonId").addEventListener("click", getData);
+
+        function getRandomColor() {
+          const letters = '0123456789ABCDEF';
+          let color = '#';
+          for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+          }
+          return color;
+        }
+      });
+    </script>
+  </body>
 </html>

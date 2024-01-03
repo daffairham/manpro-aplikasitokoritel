@@ -268,7 +268,7 @@ router.get('/scatter-plot', (req, res) => {
         const selectedAttribute1 = req.body["atribut-1"];
         const selectedAttribute2 = req.body["atribut-2"];
         // Lakukan query ke database
-        const query = `SELECT products.id, place.NumWebPurchases, products.MntWines
+        const query = `SELECT place.NumWebPurchases, products.MntWines
                     FROM products 
                     INNER JOIN place ON products.id = place.id
                     ORDER BY place.NumWebPurchases DESC
@@ -309,11 +309,10 @@ router.post('/scatter-plot', async (req, res) => {
         const selectedAttribute1 = req.body["atribut-1"];
         const selectedAttribute2 = req.body["atribut-2"];
 
-        const query = `SELECT products.id, place.${selectedAttribute1}, products.${selectedAttribute2}
+        const query = `SELECT place.${selectedAttribute1}, products.${selectedAttribute2}
                         FROM products 
                         INNER JOIN place ON products.id = place.id
-                        ORDER BY place.${selectedAttribute1} DESC
-                        LIMIT 10;`;
+                        ORDER BY place.${selectedAttribute1} DESC`;
 
         pool.query(query, (error, results, fields) => {
             if (error) {
