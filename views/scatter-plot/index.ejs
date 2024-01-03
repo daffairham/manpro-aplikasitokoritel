@@ -3,7 +3,8 @@
   <%- Head %>
 
   <body>
-    <%- Header %> <%- Navigation %> <%- Layout %> 
+    <%- Header %> <%- Navigation %> <%- Layout %> <%- JSON.stringify(data) %>
+    <%= selectedAttribute1 %> <%= selectedAttribute2 %>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         // Initial render of the chart with dummy data
@@ -52,8 +53,8 @@
                 {
                   label: `${selectedAttribute1} vs ${selectedAttribute2}`,
                   data: data.map((item) => ({
-                    x: item[selectedAttribute1],
-                    y: item[selectedAttribute2],
+                    x: item[selectedAttribute2], // Swap x and y axes
+                    y: item[selectedAttribute1],
                   })),
                   backgroundColor: getRandomColor(),
                   borderColor: getRandomColor(),
@@ -67,13 +68,13 @@
                 x: {
                   title: {
                     display: true,
-                    text: selectedAttribute1,
+                    text: selectedAttribute2, // Swap x and y axis labels
                   },
                 },
                 y: {
                   title: {
                     display: true,
-                    text: selectedAttribute2,
+                    text: selectedAttribute1, // Swap x and y axis labels
                   },
                 },
               },
