@@ -53,12 +53,12 @@ router.post("/upload", upload.single("uploadfile"), (req, res) => {
         return res.status(400).send("No file uploaded.");
     }
     // console.log(req.file); // Log file information
-    
+
     // Get the current module's file path
     const __filename = fileURLToPath(import.meta.url);
     // Get the directory path
     const __dirname = dirname(__filename);
-    
+
     const filePath = path.resolve("public", "uploads", req.file.filename);
     importCSVData2MySQL(filePath)
         .then(() => {
@@ -75,7 +75,7 @@ router.post("/upload", upload.single("uploadfile"), (req, res) => {
 async function importCSVData2MySQL(filePath) {
     try {
         const rows = [];
-        
+
         // Read CSV file and push rows to the array
         await new Promise((resolve, reject) => {
             fs.createReadStream(filePath)
@@ -204,7 +204,7 @@ router.get('/graph-bar', (req, res) => {
                 return;
             }
 
-            
+
             // Kirim data ke template EJS
             res.render('graph-bar/index', {
                 Head: Head('../css/output.css', '../js/cosmetic.js', 'Grafik Bar'),
@@ -214,7 +214,7 @@ router.get('/graph-bar', (req, res) => {
                 Layout: Layout.graph('graph-bar'),
                 selectedAttribute: selectedAttribute,
                 data: results
-                
+
             });
         });
     } catch (error) {
@@ -251,7 +251,7 @@ router.post('/graph-bar', async (req, res) => {
                 Layout: Layout.graph('graph-bar'),
                 selectedAttribute: selectedAttribute,
                 data: data
-                
+
             });
             console.log(data);
         });
@@ -263,14 +263,85 @@ router.post('/graph-bar', async (req, res) => {
 
 // route halaman scatter plot
 router.get('/scatter-plot', (req, res) => {
-    res.render('scatter-plot/index', {
-        Head: Head('../css/output.css', '../js/cosmetic.js', 'Scatter Plot'),
-        Header: Header.global,
-        Path: 'scatter-plot',
-        Navigation: Navigation.global,
-        Layout: Layout.graph('scatter-plot'),
-    })
-})
+    try {
+        // Dapatkan atribut yang dipilih dari query parameters
+        const selectedAttribute1 = req.body["atribut-1"];
+        const selectedAttribute2 = req.body["atribut-2"];
+        // Lakukan query ke database
+        const query = `SELECT products.id, place.NumWebPurchases, products.MntWines
+                    FROM products 
+                    INNER JOIN place ON products.id = place.id
+                    ORDER BY place.NumWebPurchases DESC
+                    LIMIT 10;`;
+
+
+        // Eksekusi query
+        pool.query(query, (error, results) => {
+            if (error) {
+                console.error('Error executing query:', error);
+                res.status(500).send('Internal Server Error');
+                return;
+            }
+
+            const data = results.map(row => ({ ...row }));
+
+            // Kirim data ke template EJS
+            res.render('scatter-plot/index', {
+                Head: Head('../css/output.css', '../js/cosmetic.js', 'Scatter Plot'),
+                Header: Header.global,
+                Path: 'scatter-plot',
+                Navigation: Navigation.global,
+                Layout: Layout.scatter('scatter-plot'),
+                selectedAttribute1: selectedAttribute1,
+                selectedAttribute2: selectedAttribute2,
+                data: data,
+            });
+            console.log(data);
+        });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+router.post('/scatter-plot', async (req, res) => {
+    try {
+        const selectedAttribute1 = req.body["atribut-1"];
+        const selectedAttribute2 = req.body["atribut-2"];
+
+        const query = `SELECT products.id, place.${selectedAttribute1}, products.${selectedAttribute2}
+                        FROM products 
+                        INNER JOIN place ON products.id = place.id
+                        ORDER BY place.${selectedAttribute1} DESC
+                        LIMIT 10;`;
+
+        pool.query(query, (error, results, fields) => {
+            if (error) {
+                console.error('Error executing query:', error);
+                res.status(500).send('Internal Server Error');
+                return;
+            }
+
+            const data = results.map(row => ({ ...row }));
+
+            // Kirim data ke template EJS
+            res.render('scatter-plot/index', {
+                Head: Head('../css/output.css', '../js/cosmetic.js', 'Scatter Plot'),
+                Header: Header.global,
+                Path: 'scatter-plot',
+                Navigation: Navigation.global,
+                Layout: Layout.scatter('scatter-plot'),
+                selectedAttribute1: selectedAttribute1,
+                selectedAttribute2: selectedAttribute2,
+                data: data,
+            });
+        });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 
 
 
