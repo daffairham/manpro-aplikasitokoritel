@@ -105,7 +105,24 @@ const Container = {
                     Submit
                 </button>
             </form>
-            
+            <div class="h-full w-2/3  max-w-[130vh] px-6 py-8">
+            <table style="width: 100%; border-collapse: collapse; background-color: white; border: 1px solid #ccc;" id="myTable">
+            <thead>
+              <tr>
+                <th style="padding: 12px; border-bottom: 1px solid #ccc;" id="atribut1"></th>
+                <th style="padding: 12px; border-bottom: 1px solid #ccc;" id="atribut2""></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 12px; border-bottom: 1px solid #ccc;" id="data1"></td>
+                <td style="padding: 12px; border-bottom: 1px solid #ccc;" id="data2"></td>
+              </tr>
+              <tr>
+              </tr>
+            </tbody>
+          </table>
+                </div>
         </div>
     `,
 };

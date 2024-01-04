@@ -4,66 +4,37 @@
 
   <body>
     <%- Header %> <%- Navigation %> <%- Layout %> 
+    <%- JSON.stringify(result) %>
     <script>
-function getData() {
-        const selectedAttribute1 = document.getElementById("peopleColumn").value;
-        const selectedAttribute2 = document.getElementById("productsColumn").value;
-
-        // Create form data
-        const formData = new URLSearchParams();
-        formData.append("peopleColumn", selectedAttribute1);
-        formData.append("productsColumn", selectedAttribute2);
-
-        // Fetch data from the server
-        fetch("/summary", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: formData,
-          })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-          })
-          .then((data) => {
-            console.log("Data received:", data);
-            // Update the chart with the new data
-            summaryTable(data, selectedAttribute1, selectedAttribute2);
-          })
-          .catch((error) => {
-            console.error("Error fetching data:", error);
-          });
+      var jsonData = <%- JSON.stringify(result) %>;
+  
+      // Mengambil elemen-elemen tabel
+      var table = document.getElementById("myTable");
+  
+      // Membuat header berdasarkan atribut JSON pertama
+      var firstItem = jsonData[0];
+      var headerRow = document.createElement('tr');
+      for (var key in firstItem) {
+          var th = document.createElement('th');
+          th.textContent = key;
+          headerRow.appendChild(th);
       }
-      function summaryTable(data, selectedAttribute1, selectedAttribute2) {
-        // Create a table element
-        const table = document.createElement('table');
-        table.border = "1";
-
-        // Create the table header
-        const headerRow = table.insertRow();
-        const headerCell1 = headerRow.insertCell(0);
-        const headerCell2 = headerRow.insertCell(1);
-        headerCell1.innerHTML = selectedAttribute1;
-        headerCell2.innerHTML = selectedAttribute2;
-
-        // Populate the table with data
-        data.forEach(row => {
-          const tableRow = table.insertRow();
-          const cell1 = tableRow.insertCell(0);
-          const cell2 = tableRow.insertCell(1);
-          cell1.innerHTML = row[selectedAttribute1];
-          cell2.innerHTML = row[selectedAttribute2];
-        });
-
-        // Replace the existing content with the new table
-        const container = document.getElementById('summaryContainer');
-        container.innerHTML = '';  // Clear existing content
-        container.appendChild(table);
-      }
-    </script>
+      table.getElementsByTagName('thead')[0].appendChild(headerRow);
+  
+      // Memasukkan data dari JSON ke dalam tabel
+      jsonData.forEach(function (item) {
+          var row = document.createElement('tr');
+  
+          for (var key in item) {
+              var cell = document.createElement('td');
+              cell.textContent = item[key];
+              row.appendChild(cell);
+          }
+  
+          table.getElementsByTagName('tbody')[0].appendChild(row);
+      });
+  </script>
+  
     
 </body>
 </html>
