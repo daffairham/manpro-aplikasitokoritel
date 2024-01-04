@@ -1,96 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- Head %>
-<body>
-    <%- Header %>
-    <%- Navigation %>
-    
-    
-    <section class="m-[5vh] w-full max-w-[200vh] inline-flex justify-between">
-        <a href="hint?origin=<%= Path %>" class="mr-[5vh]"> 
-            <img src="../assets/grafik.svg" alt="Petunjuk" class="aspect-auto max-h-screen min-h-[60vh]">
-        </a>
-        <div class="rounded-2xl w-full max-h-screen min-h-[60vh]">
-            <% for(const i of Data["penjualan_daging"]){ %>
-                <div class="pb-5 w-full">
-                    <h1 class="font-semibold text-3xl">Pembelian <%= i.jenis_daging %></h1>
-                    <div class="max-w-[150vh] p-4 overflow-scroll grid grid-flow-col gap-5">
-                        <% for(const j of i["penjualan"]){ %>
-                            <div class="pt-4 pb-8 px-5 bg-custom-black font-semibold rounded-2xl h-[25vh] w-[50vh] inline-flex justify-between items-center">
-                                <div class="h-full flex flex-col justify-between items-center">
-                                    <h2 class="bg-custom-mint px-4 py-1 w-fit rounded-2xl">Kelompok <%= i.jenis_daging %></h2>
-                                    <div>
-                                        <h2 class="text-2xl font-semibold text-custom-khaki-dark">Total sells</h2>
-                                        <h2 class="text-2xl font-bold text-custom-khaki-light">Rp.<%= j %></h2>
-                                    </div>
-                                </div>
-                                <div class="w-32 aspect-square rounded-3xl">
-                                    <canvas class="myChart"></canvas>
-                                </div>
-                            </div>
-                        <% } %>
-                    </div>
-                </div>
-            <% }%>
-        </div>
-    </section>
+  <%- Head %>
 
+  <body>
+    <%- Header %> <%- Navigation %> <%- Layout %> 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            ActiveNavigation('<%= Path %>')
-            
-            const canvasElements = document.querySelectorAll('.myChart')
+function getData() {
+        const selectedAttribute1 = document.getElementById("peopleColumn").value;
+        const selectedAttribute2 = document.getElementById("productsColumn").value;
 
-            canvasElements.forEach((canvas, index) => {
-                const chartData = getChartData(index)
-                createChart(canvas, chartData)
-            })
-        })
+        // Create form data
+        const formData = new URLSearchParams();
+        formData.append("peopleColumn", selectedAttribute1);
+        formData.append("productsColumn", selectedAttribute2);
 
-        function getChartData(index) {
-            const labels = ['A', 'B', 'C']
-            const data = [20, 30, 50];
-            const backgroundColors = data.map((value, i) => (i === data.indexOf(Math.max(...data)) ? 'rgb(182, 168, 219)' : 'rgba(0, 0, 0, 0)'))
-
-            return {
-                labels: labels,
-                data: data,
-                backgroundColors: backgroundColors
+        // Fetch data from the server
+        fetch("/summary", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: formData,
+          })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
             }
-        }
+            return response.json();
+          })
+          .then((data) => {
+            console.log("Data received:", data);
+            // Update the chart with the new data
+            summaryTable(data, selectedAttribute1, selectedAttribute2);
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+          });
+      }
+      function summaryTable(data, selectedAttribute1, selectedAttribute2) {
+        // Create a table element
+        const table = document.createElement('table');
+        table.border = "1";
 
-        function createChart(canvas, chartData) {
-            const ctx = canvas.getContext('2d')
+        // Create the table header
+        const headerRow = table.insertRow();
+        const headerCell1 = headerRow.insertCell(0);
+        const headerCell2 = headerRow.insertCell(1);
+        headerCell1.innerHTML = selectedAttribute1;
+        headerCell2.innerHTML = selectedAttribute2;
 
-            const chartConfig = {
-                type: 'doughnut',
-                data: {
-                    labels: chartData.labels,
-                    datasets: [{
-                        data: chartData.data,
-                        backgroundColor: chartData.backgroundColors,
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: false // Hide the legend
-                        },
-                        tooltips: {
-                            callbacks: {
-                                label: function (tooltipItem, data) {
-                                    return data.labels[tooltipItem.index] + ': ' + data.datasets[0].data[tooltipItem.index]
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+        // Populate the table with data
+        data.forEach(row => {
+          const tableRow = table.insertRow();
+          const cell1 = tableRow.insertCell(0);
+          const cell2 = tableRow.insertCell(1);
+          cell1.innerHTML = row[selectedAttribute1];
+          cell2.innerHTML = row[selectedAttribute2];
+        });
 
-            new Chart(ctx, chartConfig)
-        }
+        // Replace the existing content with the new table
+        const container = document.getElementById('summaryContainer');
+        container.innerHTML = '';  // Clear existing content
+        container.appendChild(table);
+      }
     </script>
+    
 </body>
 </html>

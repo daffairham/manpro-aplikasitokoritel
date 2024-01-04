@@ -40,6 +40,42 @@ const Container = {
                 </div>
             </div>
     `,
-}
+    summary: `
+        <div class="bg-custom-black rounded-2xl w-full max-h-screen min-h-[60vh] inline-flex justify-between">
+            <form action="/summary" method="post" class="mx-auto mt-12 h-80 w-auto flex flex-col items-center justify-between">
+                <div class="grid grid-flow-row gap-3 w-56">
+                    <label for="peopleColumn" class="text-[#fff] text-xl">Select People Column:</label>
+                    <select name="peopleColumn" id="peopleColumn" class="px-10 py-2 rounded-md text-xl">
+                        
+                            <option value="Year_Birth">Tahun Lahir</option>
+                            <option value="Education">Pendidikan</option>
+                            <option value="Marital_Status">Status Perkawinan</option>
+                            <option value="Income">Pendapatan</option>
+                            <option value="Kidhome">Anak di Rumah</option>
+                            <option value="Teenhome">Remaja di Rumah</option>
+                            <option value="Dt_Customer">Tanggal Bergabung</option>
+                            <option value="Recency">Pembelian Terakhir</option>
+                            <option value="Complain">Keluhan</option>
+                            
+                    </select>
 
+                    <label for="productsColumn" class="text-[#fff] text-xl">Select Products Column:</label>
+                    <select name="productsColumn" id="productsColumn" class="px-10 py-2 rounded-md text-xl">
+                        
+                            <option value="MntWines">Jumlah Wine</option>
+                            <option value="MntFruits">Jumlah Buah-buahan</option>
+                            <option value="MntMeatProducts">Jumlah Daging</option>
+                            <option value="MntFishProducts">Jumlah Ikan</option>
+                            <option value="MntSweetProducts">Jumlah Produk Manis</option>
+                            <option value="MntGoldProds">Jumlah Produk Emas</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-custom-orchid border-2 border-custom-orchid hover:bg-custom-black hover:border-custom-orchid hover:text-custom-orchid transition duration-0.75 px-4 py-2 font-medium text-lg text-custom-black rounded-lg">
+                    Submit
+                </button>
+            </form>
+            
+        </div>
+    `,
+};
 export { Container as Container }

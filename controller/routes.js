@@ -52,12 +52,12 @@ router.post("/upload", upload.single("uploadfile"), (req, res) => {
         return res.status(400).send("No file uploaded.");
     }
     // console.log(req.file); // Log file information
-    
+
     // Get the current module's file path
     const __filename = fileURLToPath(import.meta.url);
     // Get the directory path
     const __dirname = dirname(__filename);
-    
+
     const filePath = path.resolve("public", "uploads", req.file.filename);
     importCSVData2MySQL(filePath)
         .then(() => {
@@ -74,7 +74,7 @@ router.post("/upload", upload.single("uploadfile"), (req, res) => {
 async function importCSVData2MySQL(filePath) {
     try {
         const rows = [];
-        
+
         // Read CSV file and push rows to the array
         await new Promise((resolve, reject) => {
             fs.createReadStream(filePath)
@@ -224,15 +224,90 @@ const data = {
 }
 
 // route halaman summary
-router.get('/summary', (req, res) => {
-    res.render('summary/index', {
-        Head: Head('../css/output.css', '../js/cosmetic.js', 'Summary'),
-        Header: Header.global,
-        Path: 'summary',
-        Navigation: Navigation.global,
-        Data: data,
-    })
-})
+router.get('/summary', async (req, res) => {
+    try {
+        // Get columns from people table
+        const peopleColumns = req.body["peopleColumn"];
+
+        // Get columns from products table
+        const productsColumns = req.body["productsColumn"];
+        // Pass the Head variable using the imported function
+        const query = `
+            SELECT Education, SUM(MntMeatProducts) AS TotalMeatPurchases
+            FROM people p
+            JOIN products pr ON p.ID = pr.ID
+            GROUP BY Education;
+        `;
+        pool.query(query, (error, results) => {
+            if (error) {
+                console.error("Error executing query:", error);
+                res.status(500).send("Internal Server Error");
+                return;
+            }
+
+            const data = results.map((row) => ({ ...row }));
+
+
+            res.render('summary/index', {
+                Head: Head('../css/output.css', '../js/cosmetic.js', 'Summary'),
+                Header: Header.global,
+                Path: 'summary',
+                Navigation: Navigation.global,
+                Layout: Layout.summary('summary'),
+                Data: data,
+                result: data,  // Pass the mapped data
+                peopleColumns: peopleColumns,
+                productsColumns: productsColumns,
+            });
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+router.post('/summary', (req, res) => {
+    try {
+        const peopleColumns = req.body["peopleColumn"];
+
+        const productsColumns = req.body["productsColumn"];
+        const query = `
+            SELECT ${peopleColumns}, SUM(${productsColumns}) AS TotalMeatPurchases
+            FROM people p
+            JOIN products pr ON p.ID = pr.ID
+            GROUP BY ${peopleColumns};
+        `;
+
+        pool.query(query, (err, result) => {
+            if (err) {
+                console.error(err);
+                res.status(500).send('Internal Server Error');
+                return;
+            }
+
+            // Duplicated code for now, you may modify the result mapping as needed
+            const data = result.map(row => ({ ...row }));
+
+            res.render('summary/index', {
+                Head: Head('../css/output.css', '../js/cosmetic.js', 'Summary'),
+                Header: Header.global,
+                Path: 'summary',
+                Navigation: Navigation.global,
+                Layout: Layout.summary('summary'),
+                Data: data,
+                result: data,  // Pass the mapped data
+                peopleColumns: peopleColumns,
+                productsColumns: productsColumns,
+            });
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
+
 
 const atribut = {
     "People": [
