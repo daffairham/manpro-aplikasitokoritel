@@ -106,17 +106,17 @@ const Container = {
                 </button>
             </form>
             <div class="h-full w-2/3  max-w-[130vh] px-6 py-8">
-            <table style="width: 100%; border-collapse: collapse; background-color: white; border: 1px solid #ccc;" id="myTable">
+            <table style="width: 100%; border-collapse: collapse; background-color: white; border: 5px solid #ccc;" id="myTable">
             <thead>
               <tr>
-                <th style="padding: 12px; border-bottom: 1px solid #ccc;" id="atribut1"></th>
-                <th style="padding: 12px; border-bottom: 1px solid #ccc;" id="atribut2""></th>
+                <th style="padding: 12px; border-bottom: 3px solid #000;" id="atribut1"></th>
+                <th style="padding: 12px; border-bottom: 3px solid #000;" id="atribut2"></th>
               </tr>
             </thead>
-            <tbody>
+            <tbody">
               <tr>
-                <td style="padding: 12px; border-bottom: 1px solid #ccc;" id="data1"></td>
-                <td style="padding: 12px; border-bottom: 1px solid #ccc;" id="data2"></td>
+                <td style="padding: 12px; border-right: 3px solid #000;" id="data1"></td>
+                <td style="padding: 12px; border-bottom: 3px solid #000 border-right: 3px solid #000;" id="data2"></td>
               </tr>
               <tr>
               </tr>

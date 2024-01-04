@@ -266,7 +266,6 @@ router.post("/graph-bar", async (req, res) => {
         selectedAttribute: selectedAttribute,
         data: data,
       });
-      console.log(data);
     });
   } catch (error) {
     console.error("Error:", error);
@@ -306,7 +305,6 @@ router.get("/scatter-plot", (req, res) => {
         selectedAttribute2: selectedAttribute2,
         data: data,
       });
-      console.log(data);
     });
   } catch (error) {
     console.error("Error:", error);
@@ -364,7 +362,8 @@ router.get('/summary', async (req, res) => {
             SELECT Education, SUM(MntMeatProducts) AS TotalMeatPurchases
             FROM people p
             JOIN products pr ON p.ID = pr.ID
-            GROUP BY Education;
+            GROUP BY Education
+            limit 15;
         `;
         pool.query(query, (error, results) => {
             if (error) {
@@ -400,10 +399,11 @@ router.post('/summary', (req, res) => {
 
         const productsColumns = req.body["productsColumn"];
         const query = `
-            SELECT ${peopleColumns}, SUM(${productsColumns}) AS TotalMeatPurchases
+            SELECT ${peopleColumns}, SUM(${productsColumns}) AS ${productsColumns}
             FROM people p
             JOIN products pr ON p.ID = pr.ID
-            GROUP BY ${peopleColumns};
+            GROUP BY ${peopleColumns}
+            limit 15;
         `;
 
         pool.query(query, (err, result) => {
