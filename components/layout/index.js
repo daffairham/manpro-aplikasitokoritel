@@ -21,6 +21,17 @@ const Layout = {
             </section>
         `
     } ,
+    scatter: (Path) => {
+        return `
+            <section class="m-[5vh] w-full max-w-[200vh] inline-flex justify-between">
+                <a href="hint?origin=${Path}" class="mr-[5vh]"> 
+                    <img src="../assets/grafik.svg" alt="Petunjuk" class="aspect-auto max-h-screen min-h-[60vh]">
+                </a>
+                ${Container.scatter}
+            </section>
+        `
+    } ,
+    
     summary: (Path) => {
         return `
             <section class="m-[5vh] w-full max-w-[200vh] inline-flex justify-between">

@@ -1,83 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- Head %>
-<body>
-    <%- Header %>
+  <%- Head %>
+  <body>
+    <%- Header %> <%- Navigation %> <%- Layout %>
+
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            ActiveNavigation('<%= Path %>')
-        })
-    </script>
-    <%- Navigation %> 
-    <%- Layout %>
-    
-    <script>
-        const data = {
-          "tahun": ["2020", "2021", "2022"],
-          "penjualan_daging": [
-            {
-              "jenis_daging": "Sapi",
-              "penjualan": [350, 400, 380]
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initial render of the chart with dummy data
+        initializeChart(<%- JSON.stringify(data) %>, '<%= selectedAttribute %>');
+
+        // Function to fetch data from the server
+        function getData() {
+          const selectedAttribute = document.getElementById("atribut-1").value;
+
+          // Fetch data from the server
+          fetch("/graph-bar", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
             },
-            {
-              "jenis_daging": "Ayam",
-              "penjualan": [500, 550, 600]
-            },
-            {
-              "jenis_daging": "Kambing",
-              "penjualan": [200, 220, 250]
-            }
-          ]
-        }    
-        const ctx = document.getElementById('myChart').getContext('2d')    
-        const labels = data.tahun
-        const datasets = data.penjualan_daging.map(item => {
-          return {
-            label: item.jenis_daging,
-            data: item.penjualan,
-            backgroundColor: getRandomColor(), 
-            borderColor: getRandomColor(),
-            borderWidth: 1
-          }
-        })
-    
-        const config = {
-          type: 'bar',
-          data: {
-            labels: labels,
-            datasets: datasets
-          },
-          options: {
-            responsive: true,
-            scales: {
-              x: {
-                stacked: true,
-                title: {
-                  display: true,
-                  text: 'Tahun'
-                }
-              },
-              y: {
-                stacked: true,
-                title: {
-                  display: true,
-                  text: 'Penjualan'
-                }
+            body: `atribut-1=${selectedAttribute}`,
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
               }
-            }
-          }
+              return response.json();
+            })
+            .then((data) => {
+              console.log("Data received:", data);
+              // Update the chart with the new data
+              initializeChart(data, selectedAttribute);
+            })
+            .catch((error) => {
+              console.error("Error fetching data:", error);
+            });
         }
-    
-        const myChart = new Chart(ctx, config);
-    
+
+        // Function to initialize the Chart.js
+        function initializeChart(data, selectedAttribute) {
+          const ctx = document.getElementById("myChart").getContext("2d");
+          const myChart = new Chart(ctx, {
+            type: "bar",
+            data: {
+              labels: data.map((item) => item.id),
+              datasets: [
+                {
+                  label: selectedAttribute,
+                  data: data.map((item) => item[selectedAttribute]),
+                  backgroundColor: getRandomColor(),
+                  borderColor: getRandomColor(),
+                  borderWidth: 1,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              scales: {
+                x: {
+                  title: {
+                    display: true,
+                    text: "ID",
+                  },
+                },
+                y: {
+                  title: {
+                    display: true,
+                    text: selectedAttribute,
+                  },
+                },
+              },
+            },
+          });
+        }
+
+        // Call getData when the button is clicked
+        document.getElementById("buttonId").addEventListener("click", getData);
+
         function getRandomColor() {
-          const letters = '0123456789ABCDEF'
-          let color = '#'
+          const letters = '0123456789ABCDEF';
+          let color = '#';
           for (let i = 0; i < 6; i++) {
             color += letters[Math.floor(Math.random() * 16)];
           }
-          return color
+          return color;
         }
-      </script>
-</body>
+      });
+    </script>
+  </body>
 </html>

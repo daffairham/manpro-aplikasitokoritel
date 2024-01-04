@@ -31,7 +31,7 @@ app.use(routes);
 
 app.use((err, req, res, next) => {
   console.error(err);
-  res.status(500).send('Maaf, saat ini masih belum bisa T-T, sudah 80% kok!');
+  res.status(500).send('Maaf, saat ini masih belum bisa T-T');
 });
 
 app.listen(port, () => {
