@@ -352,81 +352,87 @@ router.post("/scatter-plot", async (req, res) => {
 });
 
 // route halaman summary
-router.get("/summary", (req, res) => {
-  res.render("summary/index", {
-    Head: Head("../css/output.css", "../js/cosmetic.js", "Summary"),
-    Header: Header.global,
-    Path: "summary",
-    Navigation: Navigation.global,
-    Data: data,
-  });
+router.get('/summary', async (req, res) => {
+    try {
+        // Get columns from people table
+        const peopleColumns = req.body["peopleColumn"];
+
+        // Get columns from products table
+        const productsColumns = req.body["productsColumn"];
+        // Pass the Head variable using the imported function
+        const query = `
+            SELECT Education, SUM(MntMeatProducts) AS TotalMeatPurchases
+            FROM people p
+            JOIN products pr ON p.ID = pr.ID
+            GROUP BY Education;
+        `;
+        pool.query(query, (error, results) => {
+            if (error) {
+                console.error("Error executing query:", error);
+                res.status(500).send("Internal Server Error");
+                return;
+            }
+
+            const data = results.map((row) => ({ ...row }));
+
+
+            res.render('summary/index', {
+                Head: Head('../css/output.css', '../js/cosmetic.js', 'Summary'),
+                Header: Header.global,
+                Path: 'summary',
+                Navigation: Navigation.global,
+                Layout: Layout.summary('summary'),
+                Data: data,
+                result: data,  // Pass the mapped data
+                peopleColumns: peopleColumns,
+                productsColumns: productsColumns,
+            });
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
-const atribut = {
-  People: [
-    { ID: "Customer's unique identifier" },
-    { Year_Birth: "Customer's birth year" },
-    { Education: "Customer's education level" },
-    { Marital_Status: "Customer's marital status" },
-    { Income: "Customer's yearly household income" },
-    { Kidhome: "Number of children in customer's household" },
-    { Teenhome: "Number of teenagers in customer's household" },
-    { Dt_Customer: "Date of customer's enrollment with the company" },
-    { Recency: "Number of days since customer's last purchase" },
-    {
-      Complain: "1 if the customer complained in the last 2 years, 0 otherwise",
-    },
-  ],
-  Products: [
-    { ID: "Product's unique identifier" },
-    { MntWines: "Amount spent on wine in last 2 years" },
-    { MntFruits: "Amount spent on fruits in last 2 years" },
-    { MntMeatProducts: "Amount spent on meat in last 2 years" },
-    { MntFishProducts: "Amount spent on fish in last 2 years" },
-    { MntSweetProducts: "Amount spent on sweets in last 2 years" },
-    { MntGoldProds: "Amount spent on gold in last 2 years" },
-  ],
-  Promotion: [
-    { ID: "Promotion's unique identifier" },
-    { NumDealsPurchases: "Number of purchases made with a discount" },
-    {
-      AcceptedCmp1:
-        "1 if customer accepted the offer in the 1st campaign, 0 otherwise",
-    },
-    {
-      AcceptedCmp2:
-        "1 if customer accepted the offer in the 2nd campaign, 0 otherwise",
-    },
-    {
-      AcceptedCmp3:
-        "1 if customer accepted the offer in the 3rd campaign, 0 otherwise",
-    },
-    {
-      AcceptedCmp4:
-        "1 if customer accepted the offer in the 4th campaign, 0 otherwise",
-    },
-    {
-      AcceptedCmp5:
-        "1 if customer accepted the offer in the 5th campaign, 0 otherwise",
-    },
-    {
-      Response:
-        "1 if customer accepted the offer in the last campaign, 0 otherwise",
-    },
-  ],
-  Place: [
-    { ID: "Place's unique identifier" },
-    {
-      NumWebPurchases: "Number of purchases made through the company’s website",
-    },
-    { NumCatalogPurchases: "Number of purchases made using a catalogue" },
-    { NumStorePurchases: "Number of purchases made directly in stores" },
-    {
-      NumWebVisitsMonth:
-        "Number of visits to company’s website in the last month",
-    },
-  ],
-};
+router.post('/summary', (req, res) => {
+    try {
+        const peopleColumns = req.body["peopleColumn"];
+
+        const productsColumns = req.body["productsColumn"];
+        const query = `
+            SELECT ${peopleColumns}, SUM(${productsColumns}) AS TotalMeatPurchases
+            FROM people p
+            JOIN products pr ON p.ID = pr.ID
+            GROUP BY ${peopleColumns};
+        `;
+
+        pool.query(query, (err, result) => {
+            if (err) {
+                console.error(err);
+                res.status(500).send('Internal Server Error');
+                return;
+            }
+
+            // Duplicated code for now, you may modify the result mapping as needed
+            const data = result.map(row => ({ ...row }));
+
+            res.render('summary/index', {
+                Head: Head('../css/output.css', '../js/cosmetic.js', 'Summary'),
+                Header: Header.global,
+                Path: 'summary',
+                Navigation: Navigation.global,
+                Layout: Layout.summary('summary'),
+                Data: data,
+                result: data,  // Pass the mapped data
+                peopleColumns: peopleColumns,
+                productsColumns: productsColumns,
+            });
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+});
 
 // route halaman hint
 router.get("/hint", (req, res) => {
